@@ -1,0 +1,36 @@
+<html><head>
+<title><%= table.name %></title>
+</head>
+<body>
+<table width=100%>
+<tr>
+<td width=10% nowrap valign=top><b>Table Name:</td><td><%= table.name %></td></tr>
+<td width=10% nowrap valign=top><b>Description:</td><td><%= table_comment %></td></tr>
+<td width=10% nowrap valign=top><b>Fields:</td><td>
+<table cellspacing=1 cellpadding=0 bgcolor=#bbbbbb width=100%>
+<tr>
+<td width=20% nowrap valign=top><b>Name</b></td>
+<td width=20% nowrap valign=top><b>Type</b></td>
+<td width=20% nowrap valign=top><b>Constraints</b></td>
+<td width=40% valign=top><b>Comments</b></td>
+</tr>
+<% table.fields.each { |field|
+constraints = []
+constraints.push( "Non-null" ) if ( field.not_null ) 
+constraints.push( "Unique" ) if ( field.unique ) 
+constraints.push( "Primary key" ) if ( field.primary_key ) 
+%><tr>
+<td bgcolor=white valign=top><%= field.name %></td>
+<td bgcolor=white valign=top><%= field.type %></td>
+<td bgcolor=white valign=top><%= constraints.join( ", " ) %></td>
+<td bgcolor=white valign=top><%= field.comment %></td>
+</tr><% } %>
+</table>
+</td></tr>
+<% if ( relates_to.length > 0 )
+rel_text = relates_to.map { |table| "<a href=\"#{table}.html\">#{table}</a>" }.join( ", " )
+%><td width=10% nowrap valign=top><b>Relates To:</td>
+<td valign=top><%= rel_text %></td>
+</tr><% end %></table>
+</body>
+</html>

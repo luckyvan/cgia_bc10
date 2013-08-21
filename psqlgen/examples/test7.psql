@@ -1,0 +1,9 @@
+use PerlSQL::PerlSQL;
+use Data::Dumper;
+use DB;
+
+my $dbh = DB::get();
+
+my $id = 10;
+
+<update "UPDATE user SET ** first_name($first_name), last_name($last_name) ** WHERE id=<<$id>>">

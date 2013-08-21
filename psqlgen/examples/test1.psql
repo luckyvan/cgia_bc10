@@ -1,0 +1,12 @@
+use PerlSQL::PerlSQL;
+use Data::Dumper;
+use DB;
+
+my $dbh = DB::get();
+my $id = 10;
+
+my $data = <select>
+SELECT * FROM user WHERE id=<<$id>>
+</select>
+
+print Dumper( $data );

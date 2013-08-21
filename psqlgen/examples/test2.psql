@@ -1,0 +1,10 @@
+use PerlSQL::PerlSQL;
+use DB;
+
+my $dbh = DB::get();
+
+my $id = 10;
+
+<select_into>SELECT <$ first_name($first_name) $> FROM user WHERE id=<< $id >></select_into>
+
+print "first_name = $first_name\n";

@@ -1,0 +1,21 @@
+<ut kgdir="kg">
+  <test cmd="ruby psqlgen.rb examples/test1.psql">
+  	<out>output/test1.pl</out>
+  </test>
+  <test cmd="ruby psqlgen.rb examples/test2.psql" out="output/test2.pl">
+  </test>
+  <test cmd="ruby psqlgen.rb examples/test3.psql" out="output/test3.pl">
+  </test>
+  <test cmd="ruby psqlgen.rb examples/test4.psql" out="output/test4.pl">
+  </test>
+  <test cmd="ruby psqlgen.rb examples/test5.psql" out="output/test5.pl">
+  </test>
+  <test cmd="ruby psqlgen.rb examples/test6.psql" out="output/test6.pl">
+  </test>
+  <test cmd="ruby psqlgen.rb examples/test7.psql" out="output/test7.pl">
+  </test>
+  <test cmd="ruby psqlgen.rb examples/test8.psql" out="output/test8.pl">
+  </test>
+  <test cmd="ruby psqlgen.rb examples/test9.psql" out="output/test9.pl">
+  </test>
+</ut>

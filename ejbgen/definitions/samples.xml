@@ -1,0 +1,33 @@
+<samples>
+  <row table="Author">
+    <column name="authorID" value="100" />
+    <column name="name" value="Conway" />
+  </row>
+  <row table="Author">
+    <column name="authorID" value="101" />
+    <column name="name" value="Tate" />
+  </row>
+  <row table="Publisher">
+    <column name="publisherID" value="100" />
+    <column name="name" value="Manning" />
+  </row>
+  <row table="Book">
+    <column name="bookID" value="100" />
+    <column name="title" value="Object Oriented Perl" />
+    <column name="ISBN" value="1-884777-79-1" />
+    <column name="authorID" value="100" />
+    <column name="publisherID" value="100" />
+    <column name="status" value="3" />
+    <column name="numCopies" value="1" />
+  </row>
+  <row table="Book">
+    <column name="bookID" value="101" />
+    <column name="title" value="Bitter Java" />
+    <column name="ISBN" value="1-930110-43-X" />
+    <column name="authorID" value="101" />
+    <column name="publisherID" value="100" />
+    <column name="status" value="5" />
+    <column name="numCopies" value="1" />
+  </row>
+</samples>
+

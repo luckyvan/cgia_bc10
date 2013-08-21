@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss>
+  <enterprise-beans>
+<%
+  $tables.values.each { |table|
+%>
+    <entity>
+      <ejb-name><%= table.name %>EntityEJB</ejb-name>
+      <local-jndi-name><%= $package %>/<%= table.name %>Entity</local-jndi-name>
+    </entity>
+    <session>                   
+      <ejb-name><%= table.name %>SS</ejb-name>       
+      <jndi-name><%= $package %>/<%= table.name %>SS</jndi-name>  
+    </session>    
+<%
+  }
+%>
+  </enterprise-beans>
+</jboss>

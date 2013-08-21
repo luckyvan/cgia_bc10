@@ -1,0 +1,7 @@
+<html>
+<body>
+<% tables.each { |table| %>
+<a href="<%= table.name %>.html" target="main"><%= table.name %></a><br>
+<% } %>
+</body>
+</html>

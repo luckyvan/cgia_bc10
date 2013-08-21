@@ -1,0 +1,1 @@
+<edit name="<%= context[ 'field' ] %>" value="<%% myBean.get<%= context['field'].capitalize %>() %%>">

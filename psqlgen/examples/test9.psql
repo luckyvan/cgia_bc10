@@ -1,0 +1,10 @@
+use PerlSQL::PerlSQL;
+use Data::Dumper;
+use DB;
+
+my $dbh = DB::get();
+
+<foreach "SELECT <$ user_id $>, <$ user_login $> FROM user"> {
+	print "$user_id $user_login\n";
+}
+

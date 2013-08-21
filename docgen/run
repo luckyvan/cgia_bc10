@@ -1,0 +1,1 @@
+ruby -I../lp docgen.rb examples/tables.sql

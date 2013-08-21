@@ -1,0 +1,6 @@
+<classes>
+	<class name='foo'>
+		<field type='integer'>bar1</field>
+		<field type='integer'>bar2</field>
+	</class>
+</classes>

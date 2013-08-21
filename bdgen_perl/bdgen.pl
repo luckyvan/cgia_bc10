@@ -1,0 +1,654 @@
+=head1 NAME
+
+bdgen.pl - BigDecimal Mixed Code Generator
+
+=head1 SYNOPSIS
+
+perl bdgen.pl examples/Test1.java
+
+=head1 ABSTRACT
+
+Inside your Java file you can specify an equation using this syntax:
+
+ // bdgen_start <a=b+c>
+ // bdgen_end
+
+The equation goes in between the < and > marks.  The BigDecimal
+implementation is then put between the two comments.  Here is an example
+output:
+
+ // bdgen_start <a=b+c>
+ BigDecimal v1 = new BigDecimal( b );
+ BigDecimal v2 = new BigDecimal( c );
+ BigDecimal v3 = new BigDecimal( 0 );
+ v3 = v1.add( v2 );
+ a = v3;
+ // bdgen_end
+
+In this case the Java code will need to define 'a' and 'b' as most likely
+doubles.  And then define 'a' as a BigDecimal.
+
+=cut
+
+use File::Copy;
+use FileHandle;
+use strict;
+
+# The Variable class represents a variable or constant within the equation
+
+package Variable;
+
+# new( $str )
+#
+# $str - The value of the constant or the name of the variable
+
+sub new($)
+{
+  my ( $class, $str ) = @_;
+
+  my $self = {};
+  $self->{ str } = $str;
+
+  bless $self, $class;
+
+  return $self;
+} 
+
+# str()
+#
+# Returns the constant or variable name
+
+sub str()
+{
+  my ( $self ) = @_;
+  return $self->{ str };
+}
+
+# is_operand()
+#
+# Returns false because this is not an operand
+
+sub is_operand()
+{
+  return 0;
+}
+
+
+# The Operand class represents an operand within the equation (e.g. +,-,*,/).
+# It can also represent a function invocation.
+
+package Operand;
+
+# new($str,$func)
+#
+# $str - The string value of the operand
+# $func - The function name if there is one (undef if not).
+
+sub new($$)
+{
+  my ( $class, $str, $func ) = @_;
+
+  my $self = {};
+  $self->{ str } = $str;
+  $self->{ op } = $str;
+  $self->{ function } = $func;
+  $self->{ left } = undef; 
+  $self->{ right } = undef; 
+
+  bless $self, $class;
+
+  return $self;
+}
+
+# right( [$node] )
+#
+# $node - Optionally sets the right node if defined
+#
+# Returns the right node
+
+sub right
+{
+  my ( $self, $val ) = @_;
+  $self->{ right } = $val if ( $val );
+  return $self->{ right };
+}
+
+# left( [$node] )
+#
+# $node - Optionally sets the left node if defined
+#
+# Returns the left node
+
+sub left
+{
+  my ( $self, $val ) = @_;
+  $self->{ left } = $val if ( $val );
+  return $self->{ left };
+}
+
+# function()
+#
+# Returns the function name (or undef if not defined)
+
+sub function() { my ( $self ) = @_; return $self->{ function }; }
+
+# is_operand()
+#
+# Returns true because this is an operand
+
+sub is_operand() { return 1; }
+
+# op()
+#
+# Returns either the operand or the function if a function is defined.
+
+sub op()
+{
+  my ( $self ) = @_;
+  return $self->{ function } ? $self->{ function } : $self->{ op };
+}
+
+# str()
+#
+# Returns the string representation of this node
+
+sub str() { my ( $self ) = @_; return $self->{ str }; }
+
+
+# TokenStream represents a stream of tokens derived from equation text.
+# It wraps an array and has useful helper functions to manage the array of
+# tokens.
+
+package TokenStream;
+
+# new()
+
+sub new()
+{
+  my ( $class ) = @_;
+  my $self = [];
+  bless $self, $class;
+  return $self;
+}
+
+# add_literal($str)
+#
+# $str - Either a constant value or a variable name
+#
+# Adds the literal to the token stream
+
+sub add_literal($)
+{
+  my ( $self, $str ) = @_;
+  push @$self, new Variable( $str );
+}
+
+# add_op($str,$func)
+#
+# $str - The operand string
+# $func - The function if there is one, undef if not
+#
+# Adds an operand to the token stream
+
+sub add_op($$)
+{
+  my ( $self, $str, $func ) = @_;
+  push @$self, new Operand( $str, $func );
+}
+
+# Back into the main package again
+
+package main;
+
+# build_tokens( $eq )
+#
+# $eq - The equation string
+#
+# Tokenizes the equation string and returns the Token Stream.
+
+sub build_tokens($)
+{
+  my ( $eq ) = @_;
+
+  # Create the new token stream
+
+  my $tokens = new TokenStream();
+
+  # The special operand characters to look for
+
+  my $specials = { '=' => 1, '(' => 1, ')' => 1, '+' => 1, '-' => 1, '*' => 1, '/' => 1 };
+
+  # Remove whitespace
+
+  $eq =~ s/\s+//g;
+
+  # Start with an empty token
+
+  my $token = "";
+
+  # Walk every character
+
+  foreach my $ch ( split( //, $eq ) ) 
+  {
+    # Check to see if this is a special token
+  
+    if ( $specials->{ $ch } )
+    {
+      # Handle the case where this is a function, otherwise just add the
+      # token
+    
+      if ( $ch eq "(" && length $token > 1 )
+      {
+        $tokens->add_op( $ch, $token )
+      }
+      else
+      {
+        $tokens->add_literal( $token ) if ( length $token > 0 );
+        $tokens->add_op( $ch, undef );
+      }
+      $token = "";
+    }
+    else
+    {
+      # If this isn't special then just keep adding to the buffer
+    
+      $token .= $ch;
+    }
+  }
+
+  # Add whatever remains as a literal
+
+  $tokens->add_literal( $token ) if ( length $token > 0 );
+
+  # Return the token stream
+
+  return $tokens;
+}
+
+# relate_tokens( $eq, $start )
+#
+# $eq - The Token Stream
+# $start - The starting index
+#
+# This folds the token stream into a binary tree on operand
+# at a time.
+
+sub relate_tokens
+{
+  my ( $eq, $start ) = @_;
+
+  # Start at zero unless otherwise specified
+
+  $start = 0 unless ( $start );
+
+  # Look to see if there are any interior parenthesis from here on in,
+  # if there are then handle those first recursively.
+
+  my $count = ( scalar( @$eq ) - $start ) - 1;
+  for( my $index = 0; $index < $count; $index++ )
+  {
+    my $ind = ( $start + 1 ) + $index;
+
+    if ( @$eq[ $ind ]->str eq "(" )
+    {
+      relate_tokens( $eq, $ind );
+    }
+  }
+
+  # If we started on a parenthesis then handle that first
+
+  if ( @$eq[ $start ]->str eq '(' )
+  {
+    # Do the interior interpolation
+
+    relate_tokens( $eq, $start + 1 );
+
+    # Handle functions, and delete the starting parens
+
+    if ( @$eq[ $start ]->function )
+    {
+      @$eq[ $start ]->right( @$eq[ $start + 1 ] );
+      splice @$eq, $start+1, 1;
+    }
+    else
+    {
+      splice @$eq, $start, 1;
+    }
+
+    # And delete the corresponding trailing paren. Because this is
+    # recursive we are guarenteed that the first closing paren will 
+    # be our paren.
+
+    my $count = scalar( @$eq ) - $start;
+    for( my $index = 0; $index < $count; $index++ )
+    {
+      if ( @$eq[ $start + $index ]->str eq ")" )
+      {
+        splice @$eq, $start+$index, 1;
+        last;
+      } 
+    }
+  }
+  else
+  {
+    # If we aren't looking for parens then we are looking for operands.
+  
+    my $found = 1;
+
+    my $operators = [ '/', '*', '+', '-' ];
+
+    # Continue until we cannot find any more
+
+    while( $found )
+    {
+      $found = 0;
+
+      # Look through the operators in precedence order
+
+      foreach my $op ( @$operators )
+      {
+      # Look through the nodes to find if we have this operator
+    
+      my $count = scalar( @$eq ) - $start;
+
+        for( my $index = 0; $index < $count; $index++ )
+        {
+          my $node = @$eq[ $start + $index ];
+  
+          last if ( $node->str eq ")" );
+
+          # If we do then fold the surrounding tokens around the operators left 
+          # and right nodes and delete them for the token stream
+
+          next unless ( $node->is_operand );
+  
+          if ( $node->str eq $op )
+          {
+            my $left = @$eq[ ( $start + $index ) - 1 ];
+            my $right = @$eq[ ( $start + $index ) + 1 ];
+
+            $node->left( $left );
+            $node->right( $right );
+
+    	    splice @$eq, ( $start + $index ) + 1, 1;
+    	    splice @$eq, ( $start + $index ) - 1, 1;
+  
+            $found = 1;
+  
+            return;
+          }
+        }
+      }
+    }
+  }
+}
+
+# The variable index is global so that regardless of how many equations
+# you have they will all have unique temporary variable names.
+
+my $vindex = 0;
+
+# new_varname()
+#
+# Returns a new temporary variable name.
+
+sub new_varname()
+{
+  $vindex++;
+  return "v$vindex";
+}
+
+# new_equate_command( $commands, $token )
+#
+# $commands - The commands array
+# $token - The value to initialize the BigDecimal with
+#
+# Builds a command to create a BigDecimal with the specified value.
+
+sub new_equate_command($$)
+{
+  my ( $commands, $token ) = @_;
+
+  my $var = new_varname();
+  push @$commands, "BigDecimal $var = new BigDecimal( ".$token->str()." );";
+  return $var;
+}
+
+# final_equate_command( $commands, $var1, $var2 )
+#
+# $commands - The commands array
+# $var1 - The output variable
+# $var2 - The final result variable
+#
+# This builds the final equate Java that sets the output variable of the
+# equation to the value of the final temporary variable.
+
+sub final_equate_command($$$)
+{
+  my ( $commands, $var1, $var2 ) = @_;
+  push @$commands, "$var1 = $var2;";
+}
+
+# new_op_command( $commands, $op, $var1, $var2 )
+#
+# $commands - The commands array
+# $op - The operation
+# $var1 - The first variable
+# $var2 - The second variable
+#
+# Builds Java for function calls, adding, subtracting, etc.
+
+sub new_op_command($$$$)
+{
+  my ( $commands, $op, $var1, $var2 ) = @_;
+
+  my $var = new_varname();
+
+  if ( length $op > 1 )
+  {
+    if ( $var1 && $var2 )
+    {
+      push @$commands, "BigDecimal $var = $op( $var1, $var2 );";
+    }
+    elsif ( $var1 )
+    {
+      push @$commands, "BigDecimal $var = $op( $var1 );";
+    }
+    elsif ( var2 )
+    {
+      push @$commands, "BigDecimal $var = $op( $var2 );";
+    }
+  }
+  else
+  {
+    if ( $op eq "/" )
+    {
+      my $str = "BigDecimal $var = new BigDecimal( 0 );\n";
+      $str .= "$var = $var1.divide( $var2, BigDecimal.ROUND_DOWN );";
+      push @$commands, $str;
+    }
+    else
+    {
+      my $method = "";
+
+      $method = "add" if ( $op eq "+" );
+      $method = "subtract" if ( $op eq "-" );
+      $method = "multiply" if ( $op eq "*" );
+  
+      my $str = "BigDecimal $var = new BigDecimal( 0 );\n";
+      $str .= "$var = $var1.$method( $var2 );";
+
+      push @$commands, $str;
+    }
+  }
+
+  return $var;
+}
+
+# create_commands( $commands, $token )
+#
+# $commands - The commands array
+# $token - The starting node
+#
+# Builds the Java commands that run the equation recursively. The output
+# goes into the commands array which is an array of strings.  Each string is
+# one block of Java code.
+
+sub create_commands($$)
+{
+  my ( $commands, $token ) = @_;
+
+  unless ( $token->is_operand() )
+  {
+    return new_equate_command( $commands, $token );
+  }
+  else
+  {
+    my $v1 = $token->left ? create_commands( $commands, $token->left ) : undef;
+    my $v2 = $token->right ? create_commands( $commands, $token->right ) : undef;
+    return new_op_command( $commands, $token->op, $v1, $v2 );
+  }
+}
+
+# parse_equation( $eq )
+#
+# $eq - The equation text
+#
+# This tokenizes the equation, does the folding, then builds the Java to create
+# the equation and returns the Java at the end.
+
+sub parse_equation($)
+{
+  my ( $eq ) = @_;
+
+  # Tokenize the Java
+
+  my $tokens = build_tokens( $eq );
+
+  # Make some rudimentary checks
+
+  die( "Invalid equation" ) if ( scalar @$tokens <= 2 );
+  die( "Invalid equation" ) if ( @$tokens[0]->is_operand() );
+  die( "Invalid equation" ) unless ( @$tokens[1]->is_operand() && @$tokens[1]->str() eq "="  ) ;
+
+  # Get the name of the output variable and drop the '='
+
+  my $output_name = ( shift @$tokens )->str;
+  shift @$tokens;
+
+  # Fold until there is no more folding left to do
+
+  my $tokens_left = 1;
+  while( $tokens_left )
+  {
+    relate_tokens( $tokens );
+
+    $tokens_left = 0;
+
+    foreach my $tok ( @$tokens )
+    {
+      next unless ( $tok->is_operand );
+      $tokens_left = 1 unless ( $tok->left() || $tok->right() );
+    }
+
+  }
+
+  # Use create commands to build the equation.  Use the first operand
+  # you can find to start the equation building process
+  
+  my $out_var = undef;
+  my $commands = [];
+  foreach my $tok ( @$tokens )
+  {
+    next unless ( $tok->is_operand() );
+
+    if ( $tok->left || $tok->right )
+    {
+      $out_var = create_commands( $commands, $tok );
+    }
+
+  }
+
+  # Add the last command to set the output variable to the final
+  # equation variable
+
+  final_equate_command( $commands, $output_name, $out_var );
+
+  # Join together the array as one big string
+
+  return join "\n", @$commands;
+}
+
+# The count of equation replacements
+
+my $count;
+
+# process_eq( $eq )
+#
+# $eq - The equation string
+#
+# This is called by the regular expression searcher that finds all
+# of the equations in the text.  It calls parse_equation and wraps
+# the output in a form that is ready to insert back in the file.
+
+sub process_eq($)
+{
+  my ( $eq ) = @_;
+
+  $count++;
+
+  my $out = "// bdgen_start <$eq>\n";
+  $out .= parse_equation( $eq );
+  $out .= "\n// bdgen_end";
+
+  return $out;
+}
+
+# process_java_file( $file_name )
+#
+# $file_name - The name of the file
+#
+# Processes all of the equations in the file, then backs up the original
+# file and replaces it with the new text.
+
+sub process_java_file($)
+{
+  my ( $file_name ) = @_;
+
+  # Read in the file
+
+  my $text = "";
+  my $fh = new FileHandle( $file_name ) or die "Could not open $file_name\n";
+  while( <$fh> ) { $text .= $_; }
+  $fh->close;
+
+  # Reset the count of replacements
+
+  $count = 0;
+
+  # Replace all of the equations
+
+  $text =~ s/\/\/\s+bdgen_start\s+<(.*?)>(.*?)\/\/\s+bdgen_end/process_eq($1)/seg;
+
+  # Back up the original file
+
+  copy( $file_name, $file_name.".bak" );
+
+  # Create the new file
+ 
+  my $fh = new FileHandle( $file_name, "w" );
+  print $fh $text;
+  $fh->close;
+
+  # Report to the user what we have done
+  
+  print "Built $count equations in $file_name\n";
+}
+
+# Make sure we have the right input
+
+die "Usage: bdgen myfile.java\n" unless ( $ARGV[0] );
+
+# Process the Java file specified on the command line
+
+process_java_file( $ARGV[0] );

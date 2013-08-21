@@ -1,0 +1,37 @@
+<schema package="gen" jndi-prefix="gen">
+  <table name="Book">
+    <column name="bookID" datatype="integer" not-null="true" 
+      primary-key="true" />
+    <column name="title" datatype="varchar" length="80" not-null="true" />
+    <column name="ISBN" datatype="varchar" length="80" not-null="true" 
+      unique="true" />
+    <column name="authorID" datatype="integer" not-null="true" />
+    <column name="publisherID" datatype="integer" not-null="true" />
+    <column name="status" datatype="integer" not-null="true" />
+    <column name="numCopies" datatype="integer" not-null="true" />
+  </table>
+  <table name="Author">
+    <column name="authorID" datatype="integer" not-null="true" 
+      primary-key="true" />
+    <column name="name" datatype="varchar" length="80" not-null="true" 
+      unique="true" />
+    <column name="penName" datatype="varchar" length="80" />
+  </table>
+  <table name="Publisher">
+    <column name="publisherID" datatype="integer" not-null="true" 
+      primary-key="true" />
+    <column name="name" datatype="varchar" length="80" not-null="true" 
+      unique="true" />  
+  </table>
+  <foreign-key>
+    <fk-table>Book</fk-table>
+    <fk-column>authorID</fk-column>
+    <fk-references>Author</fk-references>
+  </foreign-key>
+  <foreign-key>
+    <fk-table>Book</fk-table>
+    <fk-column>publisherID</fk-column>
+    <fk-references>Publisher</fk-references>
+  </foreign-key>
+</schema>
+

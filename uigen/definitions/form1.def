@@ -1,0 +1,7 @@
+<file name="form1.jsp" title="Edit Name">
+  <container name="edit_form" bean="NameBean">
+    <edit name="first" field="first" />
+    <edit name="middle" field="middle" />
+    <edit name="last" field="last" />
+  </container>
+</file>

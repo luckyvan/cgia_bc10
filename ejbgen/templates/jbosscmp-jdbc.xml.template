@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jbosscmp-jdbc>
+  <defaults>
+    <datasource>java:/MyPostgresDS</datasource>
+    <type-mapping>PostgreSQL</type-mapping>
+    <debug>true</debug>
+    <create-table>false</create-table>
+    <remove-table>false</remove-table>
+    <read-only>false</read-only>
+    <time-out>300</time-out>
+    <select-for-update>true</select-for-update>
+    <pk-constraint>true</pk-constraint>
+    <relation-mapping-style>foreign-key</relation-mapping-style>
+    <read-ahead>
+      <strategy>on-load</strategy>
+    </read-ahead>
+  </defaults>
+  <enterprise-beans>
+<%
+  $tables.values.each { |table|
+%>
+    <entity>
+      <ejb-name><%= table.name %>EntityEJB</ejb-name>
+      <table-name><%= table.name %></table-name>
+<%
+    table.columnsArray.each {|column|
+%>      <cmp-field>
+        <field-name><%= column.name %></field-name>
+        <column-name><%= column.name %></column-name>
+      </cmp-field>
+<%
+    }
+%>    </entity>
+<%
+  } 
+%>  
+  </enterprise-beans>
+</jbosscmp-jdbc>

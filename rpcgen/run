@@ -1,0 +1,1 @@
+ruby -I../lp rpcgen.rb examples/Test.java

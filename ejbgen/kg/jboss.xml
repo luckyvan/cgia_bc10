@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss>
+  <enterprise-beans>
+
+    <entity>
+      <ejb-name>BookEntityEJB</ejb-name>
+      <local-jndi-name>gen/BookEntity</local-jndi-name>
+    </entity>
+    <session>                   
+      <ejb-name>BookSS</ejb-name>       
+      <jndi-name>gen/BookSS</jndi-name>  
+    </session>    
+
+    <entity>
+      <ejb-name>AuthorEntityEJB</ejb-name>
+      <local-jndi-name>gen/AuthorEntity</local-jndi-name>
+    </entity>
+    <session>                   
+      <ejb-name>AuthorSS</ejb-name>       
+      <jndi-name>gen/AuthorSS</jndi-name>  
+    </session>    
+
+    <entity>
+      <ejb-name>PublisherEntityEJB</ejb-name>
+      <local-jndi-name>gen/PublisherEntity</local-jndi-name>
+    </entity>
+    <session>                   
+      <ejb-name>PublisherSS</ejb-name>       
+      <jndi-name>gen/PublisherSS</jndi-name>  
+    </session>    
+
+  </enterprise-beans>
+</jboss>

@@ -1,0 +1,2 @@
+#!/bin/sh
+ruby -I../.. read_sql.rb $*

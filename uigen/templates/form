@@ -1,0 +1,3 @@
+<form action="<%= @output_file_name %>" method="post">
+<%= process_nodes() %>
+</form>

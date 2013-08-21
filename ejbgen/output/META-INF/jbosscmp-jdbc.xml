@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jbosscmp-jdbc>
+  <defaults>
+    <datasource>java:/MyPostgresDS</datasource>
+    <type-mapping>PostgreSQL</type-mapping>
+    <debug>true</debug>
+    <create-table>false</create-table>
+    <remove-table>false</remove-table>
+    <read-only>false</read-only>
+    <time-out>300</time-out>
+    <select-for-update>true</select-for-update>
+    <pk-constraint>true</pk-constraint>
+    <relation-mapping-style>foreign-key</relation-mapping-style>
+    <read-ahead>
+      <strategy>on-load</strategy>
+    </read-ahead>
+  </defaults>
+  <enterprise-beans>
+
+    <entity>
+      <ejb-name>BookEntityEJB</ejb-name>
+      <table-name>Book</table-name>
+      <cmp-field>
+        <field-name>bookID</field-name>
+        <column-name>bookID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>title</field-name>
+        <column-name>title</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>ISBN</field-name>
+        <column-name>ISBN</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>authorID</field-name>
+        <column-name>authorID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>publisherID</field-name>
+        <column-name>publisherID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>status</field-name>
+        <column-name>status</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>numCopies</field-name>
+        <column-name>numCopies</column-name>
+      </cmp-field>
+    </entity>
+
+    <entity>
+      <ejb-name>AuthorEntityEJB</ejb-name>
+      <table-name>Author</table-name>
+      <cmp-field>
+        <field-name>authorID</field-name>
+        <column-name>authorID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+        <column-name>name</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>penName</field-name>
+        <column-name>penName</column-name>
+      </cmp-field>
+    </entity>
+
+    <entity>
+      <ejb-name>PublisherEntityEJB</ejb-name>
+      <table-name>Publisher</table-name>
+      <cmp-field>
+        <field-name>publisherID</field-name>
+        <column-name>publisherID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+        <column-name>name</column-name>
+      </cmp-field>
+    </entity>
+  
+  </enterprise-beans>
+</jbosscmp-jdbc>

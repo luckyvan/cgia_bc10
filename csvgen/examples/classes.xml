@@ -1,0 +1,8 @@
+<spec>
+  <entity name="Name">
+    <field name="first_name" type="String" user="First Name" />
+    <field name="middle_initial" type="String" user="Middle Initial" />
+    <field name="last_name" type="String" user="Last Name" />
+    <field name="age" type="Integer" user="Age" />
+  </entity>
+</spec>

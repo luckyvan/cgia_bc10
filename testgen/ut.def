@@ -1,0 +1,4 @@
+<ut kgdir="kg">
+  <test cmd="ruby -I../lp testgen.rb examples/mytest1.c" out="examples/mytest1.c" />
+  <test cmd="ruby -I../lp testgen.rb examples/mytest2.c" out="examples/mytest2.c" />
+</ut>

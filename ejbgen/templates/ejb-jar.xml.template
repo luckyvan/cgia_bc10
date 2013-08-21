@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ejb-jar PUBLIC "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN" "http://java.sun.com/j2ee/dtds/ejb-jar_2_0.dtd"> 
+<ejb-jar>
+  <description><%= $package %></description>
+  <display-name><%= $package %></display-name>
+  <enterprise-beans>
+<%
+  $tables.values.each { |table|  
+%>
+    <entity>
+      <ejb-name><%= table.name %>EntityEJB</ejb-name>
+      <local><%= $package %>.<%= table.name %>Entity</local>
+      <local-home><%= $package %>.<%= table.name %>EntityHome</local-home>
+      <ejb-class><%= $package %>.<%= table.name %>EntityBean</ejb-class>
+      <persistence-type>Container</persistence-type>
+      <prim-key-class>java.lang.Integer</prim-key-class>
+      <reentrant>False</reentrant>
+      <cmp-version>2.x</cmp-version>
+      <abstract-schema-name><%= table.name %></abstract-schema-name>
+<%
+    table.columnsArray.each {|column|
+%>      <cmp-field><field-name><%= column.name %></field-name></cmp-field>
+<%
+    }
+%>
+      <primkey-field><%= table.primaryKey.name %></primkey-field>
+<%
+    table.fmethodsArray.each{ |fmethod|
+      next if !fmethod.ejbQL
+%>      <query>
+        <query-method>
+          <method-name><%= fmethod.name %></method-name>
+<% 
+      if fmethod.params.size > 0
+%>            <method-params>
+<%
+        fmethod.params.each{ |param|
+%>              <method-param><%= param.javaType %></method-param>
+<%
+        }
+%>            </method-params>
+<%
+      else
+%>            <method-params/>
+<%
+      end
+%>          </query-method>
+        <ejb-ql>
+          <![CDATA[
+            <%= fmethod.ejbQL %>
+          ]]>
+        </ejb-ql>
+      </query>
+<%
+    }
+%>    </entity>
+    <session>
+      <ejb-name><%= table.name %>SS</ejb-name>
+      <home><%= $package %>.<%= table.name %>SSHome</home>
+      <remote><%= $package %>.<%= table.name %>SS</remote>
+      <ejb-class><%= $package %>.<%= table.name %>SSBean</ejb-class>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type>
+    </session>
+<%
+  }
+%>
+  </enterprise-beans>
+  <assembly-descriptor>
+<%
+  $tables.values.each { |table|
+%>
+    <container-transaction>
+       <method>
+          <ejb-name><%= table.name %>EntityEJB</ejb-name>
+          <method-name>*</method-name>
+       </method>
+       <trans-attribute>Required</trans-attribute>
+    </container-transaction>
+    <container-transaction>  
+       <method>
+          <ejb-name><%= table.name %>SS</ejb-name>
+          <method-name>*</method-name>
+       </method>
+       <trans-attribute>Required</trans-attribute>
+    </container-transaction>  
+<%
+  }
+%>
+  </assembly-descriptor>
+</ejb-jar>

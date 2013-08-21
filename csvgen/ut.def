@@ -1,0 +1,3 @@
+<ut kgdir="kg">
+  <test cmd="ruby -I../lp csvgen.rb examples/classes.xml" out="examples/NameReader.java" />
+</ut>

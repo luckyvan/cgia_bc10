@@ -1,0 +1,32 @@
+<extensions>
+  <value-object name="BookWithNamesValue" base-table="Book">
+    <add-column table="Author" column-name="name" />
+    <add-column table="Author" column-name="penName" />
+    <add-column table="Publisher" column-name="name" />
+  </value-object>
+  <sql-query-method name="getAllByTitle" value-object="BookWithNamesValue" >
+    <parameter name="title" java-type="String" />
+    <where>Book.title = ?</where>
+  </sql-query-method>
+  <sql-query-method name="getAllByAuthorName" value-object="BookWithNamesValue" >
+    <parameter name="authorName" java-type="String" />
+    <where>Author.name = ?</where>
+  </sql-query-method>
+  <finder-method name="findAllByPublisherID" table="Book">
+    <parameter name="publisherID" java-type="java.lang.Integer" />
+    <ejb-ql>SELECT OBJECT(o) FROM Book o WHERE o.publisherID = ?1</ejb-ql>
+  </finder-method>
+  <custom-method name="updateStatusByPublisher" table="Book" return-type="void" >
+    <parameter name="publisherID" java-type="Integer" />
+    <parameter name="newStatus" java-type="Integer" />
+    <body>
+      BookEntityHome home = BookEntityBean.getHome();
+      Collection coll = home.findAllByPublisherID(publisherID);
+      for(Iterator i = coll.iterator(); i.hasNext(); ){
+        BookEntity book = (BookEntity)i.next();
+        book.setStatus(newStatus);
+      }
+    </body>
+  </custom-method>
+</extensions>
+

@@ -1,0 +1,7 @@
+<classes>
+	<class name="Person">
+		<field>first</field>
+		<field>middle</field>
+		<field>last</field>
+	</class>
+</classes>

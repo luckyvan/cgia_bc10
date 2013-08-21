@@ -1,0 +1,14 @@
+<html>
+<head>
+<title><%= context[ 'title' ] %></title>
+</head>
+<body>
+<form action="<%= @output_file_name %>" method="post">
+<table>
+<% print each_node() { |node,text| %>
+<tr><td><%= node.attributes[ 'display_title' ] %></td><td><%= text %></td></tr>
+<% } %>
+</table>
+</form>
+</body>
+</html>

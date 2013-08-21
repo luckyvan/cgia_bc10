@@ -1,0 +1,8 @@
+<html>
+<head>
+<title><%= context[ 'title' ] %></title>
+</head>
+<body>
+<%= process_nodes() %>
+</body>
+</html>

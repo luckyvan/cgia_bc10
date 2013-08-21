@@ -1,0 +1,16 @@
+rm output/gen/*
+rm output/META-INF/*
+rm output/jsp/*
+rm output/tests/*
+ruby ejbgen.rb
+javac jutil/*.java
+jar cvf jutil.jar jutil/*.class
+cp jutil.jar /usr/local/download/jboss-3.0.0beta/lib/ext
+cd output
+javac gen/*.java
+jar cvf gen.jar gen/*.class META-INF
+cp gen.jar /usr/local/download/jboss-3.0.0beta/deploy
+cp jsp/* /usr/local/download/jakarta-tomcat-4.0.3/webapps/gen
+javac tests/*.java
+cd ..
+

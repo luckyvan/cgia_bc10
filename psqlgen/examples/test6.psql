@@ -1,0 +1,7 @@
+use PerlSQL::PerlSQL;
+use Data::Dumper;
+use DB;
+
+my $dbh = DB::get();
+
+<insert "INSERT INTO user ** first_name($first_name), last_name($last_name) **">

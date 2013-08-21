@@ -1,0 +1,7 @@
+<file name="table1.jsp" title="Edit Name">
+  <container name="table_page" bean="NameBean">
+    <column title="First" name="first" field="first" />
+    <column title="Middle" name="middle" field="middle" />
+    <column title="Last" name="last" field="last" />
+  </container>
+</file>

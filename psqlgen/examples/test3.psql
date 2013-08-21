@@ -1,0 +1,9 @@
+use PerlSQL::PerlSQL;
+use DB;
+
+my $dbh = DB::get();
+
+my $first_name = "jack";
+my $last_name = "herrington";
+
+my $id = <function>add_user( <<$first_name>>, <<$last_name>> )</function>

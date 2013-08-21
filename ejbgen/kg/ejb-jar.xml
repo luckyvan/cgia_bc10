@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ejb-jar PUBLIC "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN" "http://java.sun.com/j2ee/dtds/ejb-jar_2_0.dtd"> 
+<ejb-jar>
+  <description>gen</description>
+  <display-name>gen</display-name>
+  <enterprise-beans>
+
+    <entity>
+      <ejb-name>BookEntityEJB</ejb-name>
+      <local>gen.BookEntity</local>
+      <local-home>gen.BookEntityHome</local-home>
+      <ejb-class>gen.BookEntityBean</ejb-class>
+      <persistence-type>Container</persistence-type>
+      <prim-key-class>java.lang.Integer</prim-key-class>
+      <reentrant>False</reentrant>
+      <cmp-version>2.x</cmp-version>
+      <abstract-schema-name>Book</abstract-schema-name>
+      <cmp-field><field-name>bookID</field-name></cmp-field>
+      <cmp-field><field-name>title</field-name></cmp-field>
+      <cmp-field><field-name>ISBN</field-name></cmp-field>
+      <cmp-field><field-name>authorID</field-name></cmp-field>
+      <cmp-field><field-name>publisherID</field-name></cmp-field>
+      <cmp-field><field-name>status</field-name></cmp-field>
+      <cmp-field><field-name>numCopies</field-name></cmp-field>
+
+      <primkey-field>bookID</primkey-field>
+      <query>
+        <query-method>
+          <method-name>findAll</method-name>
+            <method-params/>
+          </query-method>
+        <ejb-ql>
+          <![CDATA[
+            SELECT OBJECT(o) FROM Book o 
+          ]]>
+        </ejb-ql>
+      </query>
+      <query>
+        <query-method>
+          <method-name>findAllByPublisherID</method-name>
+            <method-params>
+              <method-param>java.lang.Integer</method-param>
+            </method-params>
+          </query-method>
+        <ejb-ql>
+          <![CDATA[
+            SELECT OBJECT(o) FROM Book o WHERE o.publisherID = ?1
+          ]]>
+        </ejb-ql>
+      </query>
+    </entity>
+    <session>
+      <ejb-name>BookSS</ejb-name>
+      <home>gen.BookSSHome</home>
+      <remote>gen.BookSS</remote>
+      <ejb-class>gen.BookSSBean</ejb-class>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type>
+    </session>
+
+    <entity>
+      <ejb-name>AuthorEntityEJB</ejb-name>
+      <local>gen.AuthorEntity</local>
+      <local-home>gen.AuthorEntityHome</local-home>
+      <ejb-class>gen.AuthorEntityBean</ejb-class>
+      <persistence-type>Container</persistence-type>
+      <prim-key-class>java.lang.Integer</prim-key-class>
+      <reentrant>False</reentrant>
+      <cmp-version>2.x</cmp-version>
+      <abstract-schema-name>Author</abstract-schema-name>
+      <cmp-field><field-name>authorID</field-name></cmp-field>
+      <cmp-field><field-name>name</field-name></cmp-field>
+      <cmp-field><field-name>penName</field-name></cmp-field>
+
+      <primkey-field>authorID</primkey-field>
+      <query>
+        <query-method>
+          <method-name>findAll</method-name>
+            <method-params/>
+          </query-method>
+        <ejb-ql>
+          <![CDATA[
+            SELECT OBJECT(o) FROM Author o 
+          ]]>
+        </ejb-ql>
+      </query>
+    </entity>
+    <session>
+      <ejb-name>AuthorSS</ejb-name>
+      <home>gen.AuthorSSHome</home>
+      <remote>gen.AuthorSS</remote>
+      <ejb-class>gen.AuthorSSBean</ejb-class>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type>
+    </session>
+
+    <entity>
+      <ejb-name>PublisherEntityEJB</ejb-name>
+      <local>gen.PublisherEntity</local>
+      <local-home>gen.PublisherEntityHome</local-home>
+      <ejb-class>gen.PublisherEntityBean</ejb-class>
+      <persistence-type>Container</persistence-type>
+      <prim-key-class>java.lang.Integer</prim-key-class>
+      <reentrant>False</reentrant>
+      <cmp-version>2.x</cmp-version>
+      <abstract-schema-name>Publisher</abstract-schema-name>
+      <cmp-field><field-name>publisherID</field-name></cmp-field>
+      <cmp-field><field-name>name</field-name></cmp-field>
+
+      <primkey-field>publisherID</primkey-field>
+      <query>
+        <query-method>
+          <method-name>findAll</method-name>
+            <method-params/>
+          </query-method>
+        <ejb-ql>
+          <![CDATA[
+            SELECT OBJECT(o) FROM Publisher o 
+          ]]>
+        </ejb-ql>
+      </query>
+    </entity>
+    <session>
+      <ejb-name>PublisherSS</ejb-name>
+      <home>gen.PublisherSSHome</home>
+      <remote>gen.PublisherSS</remote>
+      <ejb-class>gen.PublisherSSBean</ejb-class>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type>
+    </session>
+
+  </enterprise-beans>
+  <assembly-descriptor>
+
+    <container-transaction>
+       <method>
+          <ejb-name>BookEntityEJB</ejb-name>
+          <method-name>*</method-name>
+       </method>
+       <trans-attribute>Required</trans-attribute>
+    </container-transaction>
+    <container-transaction>  
+       <method>
+          <ejb-name>BookSS</ejb-name>
+          <method-name>*</method-name>
+       </method>
+       <trans-attribute>Required</trans-attribute>
+    </container-transaction>  
+
+    <container-transaction>
+       <method>
+          <ejb-name>AuthorEntityEJB</ejb-name>
+          <method-name>*</method-name>
+       </method>
+       <trans-attribute>Required</trans-attribute>
+    </container-transaction>
+    <container-transaction>  
+       <method>
+          <ejb-name>AuthorSS</ejb-name>
+          <method-name>*</method-name>
+       </method>
+       <trans-attribute>Required</trans-attribute>
+    </container-transaction>  
+
+    <container-transaction>
+       <method>
+          <ejb-name>PublisherEntityEJB</ejb-name>
+          <method-name>*</method-name>
+       </method>
+       <trans-attribute>Required</trans-attribute>
+    </container-transaction>
+    <container-transaction>  
+       <method>
+          <ejb-name>PublisherSS</ejb-name>
+          <method-name>*</method-name>
+       </method>
+       <trans-attribute>Required</trans-attribute>
+    </container-transaction>  
+
+  </assembly-descriptor>
+</ejb-jar>

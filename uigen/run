@@ -1,0 +1,3 @@
+ruby uigen.rb definitions/form1.def 
+ruby uigen.rb definitions/form2.def 
+ruby uigen.rb definitions/table1.def 

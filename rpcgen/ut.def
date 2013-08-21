@@ -1,0 +1,6 @@
+<ut kgdir="kg">
+  <test cmd="ruby -I../lp rpcgen.rb examples/Test.java">
+    <out>examples/TestHandler.java</out>
+    <out>examples/TestStubs.java</out>
+  </test>
+</ut>

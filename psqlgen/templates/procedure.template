@@ -1,0 +1,2 @@
+my <%= $statement_handle %> = <%= $database_handle %>->prepare( "BEGIN; <%= varHash['sql'] %>; END;" );
+<%= varHash['binds'] %><%= $statement_handle %>->execute();

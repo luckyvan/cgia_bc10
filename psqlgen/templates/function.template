@@ -1,0 +1,7 @@
+eval {
+my <%= $statement_handle %> = <%= $database_handle %>->prepare( "BEGIN; :ps_out := <%= varHash['sql'] %>; END;" );
+my $ps_out;
+<%= $statement_handle %>->bind_var( "ps_out", \$ps_out );
+<%= varHash['binds'] %><%= $statement_handle %>->execute();
+$ps_out;
+}

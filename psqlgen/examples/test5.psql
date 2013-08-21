@@ -1,0 +1,10 @@
+<option name="database_handle" value="$dbh2">
+use PerlSQL::PerlSQL;
+use DB;
+
+my $dbh2 = DB::get();
+
+<foreach "SELECT <$ id($id) $> FROM user"> {
+	<procedure "add_account( <<$id>> )">
+}
+

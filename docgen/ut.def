@@ -1,0 +1,9 @@
+<ut kgdir="kg">
+  <test cmd="ruby -I../lp docgen.rb examples/tables.sql">
+	<out>output/Author.html</out>
+	<out>output/Book.html</out>
+	<out>output/Publisher.html</out>
+	<out>output/index.html</out>
+	<out>output/tables.html</out>
+  </test>
+</ut>

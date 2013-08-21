@@ -1,0 +1,7 @@
+my ( <%= varHash['mapped'] %> );
+{
+	my <%= $statement_handle %> = <%= $database_handle %>->prepare( "<%= varHash['sql'] %>" );
+	<%= varHash['binds'] %><%= $statement_handle %>->execute();
+	my $ps_out = ();
+	( <%= varHash['mapped'] %> ) = <%= $statement_handle %>->fetchrow();
+}

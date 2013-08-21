@@ -1,0 +1,10 @@
+<ut kgdir="kg">
+  <test cmd="ruby read.rb examples/JSObject.hpp" out="output/JSObject.hpp" />
+  <test cmd="ruby read.rb examples/SmallObject.hpp" out="output/SmallObject.hpp" />
+  <test cmd="ruby read.rb examples/mytest1.c" out="output/mytest1.c" />
+  <test cmd="ruby read.rb examples/mytest2.c" out="output/mytest2.c" />
+  <test cmd="ruby read.rb examples/pass1.java" out="output/pass1.java" />
+  <test cmd="ruby read.rb examples/pass2.java" out="output/pass2.java" />
+  <test cmd="ruby read.rb examples/psql1.sql" out="output/psql1.sql" />
+  <test cmd="ruby read.rb examples/psql2.sql" out="output/psql2.sql" />
+</ut>

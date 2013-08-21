@@ -1,0 +1,59 @@
+<html><head>
+<title>Book</title>
+</head>
+<body>
+<table width=100%>
+<tr>
+<td width=10% nowrap valign=top><b>Table Name:</td><td>Book</td></tr>
+<td width=10% nowrap valign=top><b>Description:</td><td>Book contains information about each book, the title, the author, the publisher, etc.</td></tr>
+<td width=10% nowrap valign=top><b>Fields:</td><td>
+<table cellspacing=1 cellpadding=0 bgcolor=#bbbbbb width=100%>
+<tr>
+<td width=20% nowrap valign=top><b>Name</b></td>
+<td width=20% nowrap valign=top><b>Type</b></td>
+<td width=20% nowrap valign=top><b>Constraints</b></td>
+<td width=40% valign=top><b>Comments</b></td>
+</tr>
+<tr>
+<td bgcolor=white valign=top>bookID</td>
+<td bgcolor=white valign=top>integer</td>
+<td bgcolor=white valign=top>Non-null</td>
+<td bgcolor=white valign=top>The primary key id</td>
+</tr><tr>
+<td bgcolor=white valign=top>title</td>
+<td bgcolor=white valign=top>varchar(80)</td>
+<td bgcolor=white valign=top>Non-null</td>
+<td bgcolor=white valign=top>The title of the book</td>
+</tr><tr>
+<td bgcolor=white valign=top>ISBN</td>
+<td bgcolor=white valign=top>varchar(80)</td>
+<td bgcolor=white valign=top>Non-null, Unique</td>
+<td bgcolor=white valign=top>The ISBN number of the book</td>
+</tr><tr>
+<td bgcolor=white valign=top>authorID</td>
+<td bgcolor=white valign=top>integer</td>
+<td bgcolor=white valign=top>Non-null</td>
+<td bgcolor=white valign=top>The author (as a foreign key relation)</td>
+</tr><tr>
+<td bgcolor=white valign=top>publisherID</td>
+<td bgcolor=white valign=top>integer</td>
+<td bgcolor=white valign=top>Non-null</td>
+<td bgcolor=white valign=top>The publisher (as a foreign key relation)</td>
+</tr><tr>
+<td bgcolor=white valign=top>status</td>
+<td bgcolor=white valign=top>integer</td>
+<td bgcolor=white valign=top>Non-null</td>
+<td bgcolor=white valign=top>The active or inactive state of the record</td>
+</tr><tr>
+<td bgcolor=white valign=top>numCopies</td>
+<td bgcolor=white valign=top>integer</td>
+<td bgcolor=white valign=top>Non-null</td>
+<td bgcolor=white valign=top></td>
+</tr>
+</table>
+</td></tr>
+<td width=10% nowrap valign=top><b>Relates To:</td>
+<td valign=top><a href="Author.html">Author</a>, <a href="Publisher.html">Publisher</a></td>
+</tr></table>
+</body>
+</html>

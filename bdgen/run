@@ -1,0 +1,4 @@
+ruby bdgen.rb examples/Test1.java
+ruby bdgen.rb examples/Test2.java
+ruby bdgen.rb examples/Test3.java
+ruby bdgen.rb examples/Test4.java

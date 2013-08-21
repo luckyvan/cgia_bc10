@@ -1,0 +1,3 @@
+<ut kgdir="kg">
+  <test cmd="perl bdgen.pl examples/Test1.java" out="examples/Test1.java" />
+</ut>

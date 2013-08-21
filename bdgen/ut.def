@@ -1,0 +1,6 @@
+<ut kgdir="kg">
+  <test cmd="ruby bdgen.rb examples/Test1.java" out="examples/Test1.java" />
+  <test cmd="ruby bdgen.rb examples/Test2.java" out="examples/Test2.java" />
+  <test cmd="ruby bdgen.rb examples/Test3.java" out="examples/Test3.java" />
+  <test cmd="ruby bdgen.rb examples/Test4.java" out="examples/Test4.java" />
+</ut>

@@ -1,0 +1,5 @@
+<ut kgdir="kg">
+  <test cmd="ruby uigen.rb definitions/form1.def" out="output/form1.jsp" />
+  <test cmd="ruby uigen.rb definitions/form2.def" out="output/form2.jsp" />
+  <test cmd="ruby uigen.rb definitions/table1.def" out="output/table1.jsp" />
+</ut>

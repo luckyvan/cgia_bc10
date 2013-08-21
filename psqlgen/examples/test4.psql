@@ -1,0 +1,11 @@
+use PerlSQL::PerlSQL;
+use DB;
+
+my $dbh = DB::get();
+
+my $first_name = "Jack";
+my $last_name = "Herrington";
+
+<procedure> 
+add_user( <<$first_name>>, <<$last_name>> ) 
+</procedure>
